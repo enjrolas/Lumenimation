@@ -1,0 +1,23 @@
+pygame 1.9.6
+Hello from the pygame community. https://www.pygame.org/contribute.html
+['/home/pi/stopMotionProjects/December.19.2019 12:34:34/', '/home/pi/stopMotionProjects/December.19.2019 13:02:43/', '/home/pi/stopMotionProjects/December.20.2019 16:23:04/', '/home/pi/stopMotionProjects/December.20.2019 15:09:35/', '/home/pi/stopMotionProjects/December.19.2019 13:04:39/', '/home/pi/stopMotionProjects/December.19.2019 12:54:26/', '/home/pi/stopMotionProjects/December.19.2019 13:34:23/', '/home/pi/stopMotionProjects/December.20.2019 15:07:54/']
+directory: /home/pi/stopMotionProjects/December.19.2019 12:34:34/
+initializing existing directory /home/pi/stopMotionProjects/December.19.2019 12:34:34
+directory: /home/pi/stopMotionProjects/December.19.2019 13:02:43/
+initializing existing directory /home/pi/stopMotionProjects/December.19.2019 13:02:43
+directory: /home/pi/stopMotionProjects/December.20.2019 16:23:04/
+initializing existing directory /home/pi/stopMotionProjects/December.20.2019 16:23:04
+directory: /home/pi/stopMotionProjects/December.20.2019 15:09:35/
+initializing existing directory /home/pi/stopMotionProjects/December.20.2019 15:09:35
+directory: /home/pi/stopMotionProjects/December.19.2019 13:04:39/
+initializing existing directory /home/pi/stopMotionProjects/December.19.2019 13:04:39
+directory: /home/pi/stopMotionProjects/December.19.2019 12:54:26/
+initializing existing directory /home/pi/stopMotionProjects/December.19.2019 12:54:26
+directory: /home/pi/stopMotionProjects/December.19.2019 13:34:23/
+initializing existing directory /home/pi/stopMotionProjects/December.19.2019 13:34:23
+directory: /home/pi/stopMotionProjects/December.20.2019 15:07:54/
+initializing existing directory /home/pi/stopMotionProjects/December.20.2019 15:07:54
+Traceback (most recent call last):
+  File "stopMotionLoop.py", line 25, in <module>
+    cam.start()
+SystemError: ioctl(VIDIOC_S_FMT) failure: no supported formats

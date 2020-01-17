@@ -1,0 +1,73 @@
+import curses
+from time import sleep
+from picamera import PiCamera
+import os
+from glob import glob
+from StopMotion import StopMotion
+
+camera = PiCamera()
+camera.resolution = (2592, 1944)
+#camera.start_preview()
+
+
+#load existing projects
+projects=[]
+workingDirectory="/home/pi/stopMotionProjects/*"
+activeDirectories=glob(workingDirectory)
+print(activeDirectories)
+for directory in activeDirectories:
+    print("directory: %s" %directory)
+    project=StopMotion(workingDirectory, directory)
+    projects.append(project)
+
+
+stdscr = curses.initscr()
+curses.cbreak()
+stdscr.keypad(1)
+
+state="home"
+
+stdscr.addstr(0,10,"Hit 'q' to quit")
+stdscr.refresh()
+
+key = ''
+index=0
+while key != ord('q'):
+    key = stdscr.getch()
+    if state=="home":
+        if key == curses.KEY_RIGHT:
+            if index<len(projects-1):
+                index+=1
+               
+
+        elif key == curses.KEY_LEFT:
+            if index>0:
+                index-=1
+
+        elif key==ord('n'):
+            print("making a new project")
+            project=StopMotion(workingDirectory)
+            projects.append(project)
+            state="project"
+        elif key==ord(' '):
+            project=projects[index]
+            state="project"
+            
+
+    elif state=="project":
+        if key==ord('p'):
+            projects[index].playMovie()
+        if key==ord('d'):
+            print("removing the last frame")
+            projects[index].removeFrame()
+        if key==ord('h'):
+            projects[index].close()
+            state="home"
+        if key==ord(' '):
+            print("adding a frame")
+            projects[index].addFrame(camera)
+            
+    stdscr.refresh()
+
+
+curses.endwin()

@@ -1,0 +1,9 @@
+projectDirectory="/home/pi/stopMotionProjects/December.20.2019 16:23:04/"
+def generateMovie(self):
+    import ffmpeg
+    (
+        ffmpeg
+        .input("%s/frames/%%04d.jpg" % projectDirectory)            
+        .output("%s/movie.mp4" % projectDirectory)
+        .run()
+    )
