@@ -2,6 +2,7 @@
 import sys
 import pygame
 import pygame.camera
+import pygame.mouse
 import os
 from glob import glob
 from StopMotion import StopMotion
@@ -38,7 +39,10 @@ for directory in activeDirectories:
     except:
         print("trouble loading directory %s" % directory)
         
-screen = pygame.display.set_mode((1920,1080),0)
+screen = pygame.display.set_mode((1920,1080),pygame.FULLSCREEN)
+#hide the mouse
+pygame.mouse.set_visible(0)
+
 cam_list = pygame.camera.list_cameras()
 cam = pygame.camera.Camera(cam_list[0],(1440,1080))
 cam.start()
