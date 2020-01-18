@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys
 import pygame
 import pygame.camera
@@ -31,13 +32,17 @@ activeDirectories=glob("%s*/" % workingDirectory)
 print(activeDirectories)
 for directory in activeDirectories:
     print("directory: %s" %directory)
-    project=StopMotion(workingDirectory, directory.split(os.path.sep)[-2])
-    projects.append(project)
-
+    try:
+        project=StopMotion(workingDirectory, directory.split(os.path.sep)[-2])
+        projects.append(project)
+    except:
+        print("trouble loading directory %s" % directory)
+        
 screen = pygame.display.set_mode((1920,1080),0)
 cam_list = pygame.camera.list_cameras()
 cam = pygame.camera.Camera(cam_list[0],(1440,1080))
 cam.start()
+cam.set_controls(hflip = True, vflip = True)
 frames=[]
 thumbnails=[]
 mode="home"
@@ -72,6 +77,12 @@ def generateHtml():
     f.write("</body>\n</html>\n")
     f.close()
 
+def niceShutdown():
+    generateHtml()
+    cam.stop()
+    pygame.quit()
+    sys.exit()
+
 while True:
     screen.fill([0,0,0])
     #drawing code
@@ -87,7 +98,7 @@ while True:
             screen.blit(copy, position(ind))
             ind+=1
         copy=addNew
-        copy.blit(mask,(0,0))
+        copy.blit(mask,(0,255))
         copy.set_colorkey([0,0,0])
         screen.blit(copy, position(len(projects)))        
 
@@ -113,15 +124,16 @@ while True:
          
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            generateHtml()
-            cam.stop()
-            pygame.quit()
-            sys.exit()
+            niceShutdown()
+        
         if event.type==pygame.KEYDOWN or event.type==pygame.JOYBUTTONDOWN:
             try:
                 key=event.key
             except:
                 key=0
+            if key ==pygame.K_ESCAPE:
+                niceShutdown()
+                
             if mode=="home":                
                 if key == pygame.K_RIGHT or joystick is not None and joystick.get_button(RIGHT):
                     if projectIndex<len(projects):
@@ -143,7 +155,9 @@ while True:
                 print(projectIndex)
                
             elif mode=="capture":
-                keys = pygame.key.get_pressed()
+                keys = pygame.key.get_pressed() 
+                if key==ord('d') or joystick is not None and joystick.get_button(DELETE):
+                    project.removeFrame()
                 if key==ord(' ') or joystick is not None and joystick.get_button(CAPTURE):
                     project.addFrame(image1)
                 if key==ord('p') or joystick is not None and joystick.get_button(PLAY):
@@ -152,5 +166,6 @@ while True:
                 if key==ord('h') or joystick is not None and joystick.get_button(HOME):  #back home
                     generateHtml()
                     mode="home"
+                    if len(project.frames)==0:
+                        projects.remove(project)  #if it's a zombie project, remove it from the master list
                     project.close()
-                        
