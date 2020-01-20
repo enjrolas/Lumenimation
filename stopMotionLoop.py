@@ -67,7 +67,7 @@ mask.set_colorkey([255,255,255])
 spacing=10
 
 def position(index):
-    cols=4
+    cols=6
     offset=0.5
     if int(index/cols)%2==0:
         offset=0

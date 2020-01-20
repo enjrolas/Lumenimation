@@ -7,7 +7,7 @@ from PIL import Image
 
 class StopMotion:
     thumbnailDimensions=(200,150)
-    projectDimensions=(400,300)
+    projectDimensions=(266,200)
         
     def __init__(self, workingDirectory, projectDirectory=None):        
         if projectDirectory is None:
