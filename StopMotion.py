@@ -1,5 +1,6 @@
 import datetime
 import os
+import subprocess
 import pygame
 from glob import glob
 import shutil
@@ -31,6 +32,7 @@ class StopMotion:
             tmp=pygame.image.load("%s/thumbnail.jpg" % self.projectDirectory)
             self.numFrames=len(glob("%s/frames/*.jpg" % self.projectDirectory))
             self.thumbnail=pygame.transform.scale(tmp, self.projectDimensions)
+        self.startFrames=self.numFrames
 
     def loadFrames(self):
         num=1
@@ -50,20 +52,14 @@ class StopMotion:
         self.thumbnails=[]
         
     def generateMovie(self):
-        import ffmpeg
-        (
-            ffmpeg
-            .input("%s/frames/%%04d.jpg" % self.projectDirectory, framerate=10)    
-            .output("%s/movie.mp4" % self.projectDirectory, **{"crf":21})
-            .overwrite_output()
-            .run()
-        )
+        if self.startFrames != self.numFrames:
+            subprocess.Popen(["ffmpeg", "-r", "10", "-i", "%s/frames/\%04d.jpg" % self.projectDirectory, "%s/movie.mp4" % self.projectDirectory])
 
     def close(self):
         if len(self.frames)==0:  # delete the project if there are no frames to keep from having zombie projects
             shutil.rmtree(self.projectDirectory)
         else:
-#            self.generateMovie()
+            self.generateMovie()
             self.releaseFrames()
             
     def playMovie(self):

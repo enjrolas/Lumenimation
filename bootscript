@@ -2,3 +2,5 @@ sleep 10
 echo "----------------" >> /home/pi/logfile.txt
 cd /home/pi/stopMotion
 /home/pi/stopMotion/stopMotionLoop.py >> /home/pi/logfile.txt 2>&1
+cd /home/pi/stopMotionProjects
+python3 -m http.server 8000 &

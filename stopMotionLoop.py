@@ -31,14 +31,15 @@ projects=[]
 workingDirectory="/home/pi/stopMotionProjects/"
 activeDirectories=glob("%s*/" % workingDirectory)
 print(activeDirectories)
+currentDirectory=0
 for directory in activeDirectories:
-    print("directory: %s" %directory)
+    print("%d/%d:  directory: %s" %(currentDirectory, len(activeDirectories), directory))
     try:
         project=StopMotion(workingDirectory, directory.split(os.path.sep)[-2])
         projects.append(project)
     except:
         print("trouble loading directory %s" % directory)
-        
+    currentDirectory+=1
 screen = pygame.display.set_mode((1920,1080),pygame.FULLSCREEN)
 #hide the mouse
 pygame.mouse.set_visible(0)
@@ -77,7 +78,10 @@ def generateHtml():
     f=open("%sindex.html" % workingDirectory, "w")
     f.write("<html>\n\t<body>\n");
     for project in projects:
-        f.write("<div class='project'><img src='%s/thumbnail.jpg'>%s, %d frames</div>" % (project.relativeDirectory, project.relativeDirectory, project.numFrames))
+        try:
+            f.write("<a href='%s/movie.mp4'><h3><b>%s, %d frames</h3></b></div><div class='project'><img src='%s/thumbnail.jpg' width=\"500px\"></div></a>" % (project.relativeDirectory, project.relativeDirectory, project.relativeDirectory, project.numFrames))
+        except e:
+            pass
     f.write("</body>\n</html>\n")
     f.close()
 
@@ -94,6 +98,11 @@ while True:
         ind=0
         w,h=pygame.display.get_surface().get_size()
         pygame.draw.circle(screen, [255,255,255], (int(position(projectIndex)[0]+projectDimensions[0]/2), int(position(projectIndex)[1]+projectDimensions[1]/2)), int(projectDimensions[1]/2+spacing))
+        copy=addNew
+        copy.blit(mask,(0,255))
+        copy.set_colorkey([0,0,0])
+        screen.blit(copy, position(len(projects)))
+        ind+=1
         for p in projects:
 #                pygame.draw.rect(screen,[255,255,255],[offset-10, h/2-10, p.thumbnail.get_width()+20, p.thumbnail.get_height()+20], 0)
             copy=p.thumbnail
@@ -101,10 +110,6 @@ while True:
             copy.set_colorkey([0,0,0])
             screen.blit(copy, position(ind))
             ind+=1
-        copy=addNew
-        copy.blit(mask,(0,255))
-        copy.set_colorkey([0,0,0])
-        screen.blit(copy, position(len(projects)))        
 
    
     if mode=="capture":
@@ -148,12 +153,12 @@ while True:
                         projectIndex-=1
                             
                 elif key==ord(' ') or joystick is not None and joystick.get_button(SELECT):
-                    if projectIndex==len(projects):  #make a new project
+                    if projectIndex==0:  #make a new project
                         project=StopMotion(workingDirectory)
                         projects.append(project)
                         projectIndex=len(projects)-1
                     else:
-                        project=projects[projectIndex]
+                        project=projects[projectIndex-1]
                         project.loadFrames()
                     mode="capture"
                 print(projectIndex)
